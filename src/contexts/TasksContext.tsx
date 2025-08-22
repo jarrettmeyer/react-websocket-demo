@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext } from "react";
 
 export type Task = {
   task_id: string;
@@ -16,8 +16,4 @@ export type TasksContextType = {
 
 export const TasksContext = createContext<TasksContextType | undefined>(undefined);
 
-export function useTasks() {
-  const ctx = useContext(TasksContext);
-  if (!ctx) throw new Error("useTasks must be used within a TasksProvider");
-  return ctx;
-}
+

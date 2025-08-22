@@ -1,6 +1,6 @@
-
-import { useTasks, type Task } from "../contexts/TasksContext";
 import { useEffect, useRef } from "react";
+import type { Task } from "../contexts/TasksContext";
+import { useTasks } from "../hooks/useTasks";
 
 export default function ListTasks() {
   const { tasks, updateTask, removeTask } = useTasks();
@@ -18,7 +18,9 @@ export default function ListTasks() {
       }
       // Only create a socket if it doesn't exist and the task is not SUCCESS
       if (!wsRefs.current[task.task_id] && task.state !== "SUCCESS") {
-        const ws = new WebSocket(`ws://localhost:9001/tasks/${task.task_id}/ws`);
+        const ws = new WebSocket(
+          `ws://localhost:9001/tasks/${task.task_id}/ws`
+        );
         console.log(`Created websocket for task ${task.task_id}`);
         ws.onmessage = (event) => {
           try {
@@ -37,7 +39,9 @@ export default function ListTasks() {
 
   const revokeTask = async (task: Task) => {
     try {
-      await fetch(`http://localhost:9001/tasks/${task.task_id}`, { method: "DELETE" });
+      await fetch(`http://localhost:9001/tasks/${task.task_id}`, {
+        method: "DELETE",
+      });
     } catch {
       // TODO: handle errors
     }
@@ -63,35 +67,70 @@ export default function ListTasks() {
             <td>{task.task_id}</td>
             <td>{task.duration}</td>
             <td>
-              {task.state === "SUCCESS" ? (
-                <span style={{ color: "green", fontWeight: "bold" }}>{task.state}</span>
+              {task.state === "PENDING" ? (
+                <span style={{ color: "gray", fontWeight: "bold" }}>
+                  {task.state}
+                </span>
+              ) : task.state === "STARTED" ? (
+                <span style={{ color: "blue", fontWeight: "bold" }}>
+                  {task.state}
+                </span>
+              ) : task.state === "SUCCESS" ? (
+                <span style={{ color: "green", fontWeight: "bold" }}>
+                  {task.state}
+                </span>
               ) : task.state === "REVOKED" ? (
-                <span style={{ color: "orange", fontWeight: "bold" }}>{task.state}</span>
+                <span style={{ color: "orange", fontWeight: "bold" }}>
+                  {task.state}
+                </span>
               ) : task.state === "FAILURE" ? (
-                <span style={{ color: "red", fontWeight: "bold" }}>{task.state}</span>
-              ) : task.state ?? ""}
+                <span style={{ color: "red", fontWeight: "bold" }}>
+                  {task.state}
+                </span>
+              ) : (
+                task.state ?? ""
+              )}
             </td>
             <td>
-              {(["PENDING", "STARTED"].includes(task.state ?? "")) ? (
+              {["PENDING", "STARTED"].includes(task.state ?? "") ? (
                 <button
                   type="button"
                   aria-label="Revoke Task"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em', margin: '0 0.5rem' }}
-                  onClick={(e) => {e.preventDefault(); revokeTask(task); }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "1.2em",
+                    margin: "0 0.5rem",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    revokeTask(task);
+                  }}
                   title="Revoke Task"
                 >
                   🛑
                 </button>
-              ) : (["SUCCESS", "REVOKED", "FAILURE"].includes(task.state ?? "")) ? (
+              ) : ["SUCCESS", "REVOKED", "FAILURE"].includes(
+                  task.state ?? ""
+                ) ? (
                 <button
                   aria-label="Delete Task"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em', margin: "0 0.5rem" }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "1.2em",
+                    margin: "0 0.5rem",
+                  }}
                   onClick={() => removeTask(task.task_id)}
                   title="Delete Task"
                 >
                   🗑️
                 </button>
-              ) : ""}
+              ) : (
+                ""
+              )}
             </td>
           </tr>
         ))}

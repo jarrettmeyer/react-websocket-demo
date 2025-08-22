@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useTasks } from "../contexts/TasksContext";
+import { useState } from "react";
+import { useTasks } from "../hooks/useTasks";
 
 export default function CreateTaskForm() {
   const [duration, setDuration] = useState(10);
@@ -22,7 +22,7 @@ export default function CreateTaskForm() {
     onSuccess: (data) => {
       console.log("Task created:", data);
       addTask(data);
-    }
+    },
   });
 
   const handleCreateTask = (e: React.FormEvent) => {
