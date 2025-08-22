@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { createTask } from "../api/tasksApi";
 import { useTasks } from "../hooks/useTasks";
 
 export default function CreateTaskForm() {
@@ -8,16 +9,8 @@ export default function CreateTaskForm() {
 
   const createTaskMutation = useMutation({
     mutationFn: async (duration: number) => {
-      const res = await fetch("http://localhost:9001/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ duration }),
-      });
-
-      if (!res.ok) throw new Error("Failed to create task");
-
-      const data = await res.json();
-      return data;
+      const task = await createTask({ duration });
+      return task;
     },
     onSuccess: (data) => {
       console.log("Task created:", data);

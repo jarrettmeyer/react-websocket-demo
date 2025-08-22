@@ -1,11 +1,6 @@
-import { createContext } from "react";
 
-export type Task = {
-  task_id: string;
-  duration?: number;
-  state?: string;
-  date_done?: string;
-};
+import { createContext } from "react";
+import type { Task } from "../api/tasksApi";
 
 export type TasksContextType = {
   tasks: Task[];

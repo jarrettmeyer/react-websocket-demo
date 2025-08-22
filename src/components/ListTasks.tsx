@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { Task } from "../contexts/TasksContext";
+import { deleteTask, subscribeToTask, type Task } from "../api/tasksApi";
 import { useTasks } from "../hooks/useTasks";
 
 export default function ListTasks() {
@@ -18,9 +18,7 @@ export default function ListTasks() {
       }
       // Only create a socket if it doesn't exist and the task is not SUCCESS
       if (!wsRefs.current[task.task_id] && task.state !== "SUCCESS") {
-        const ws = new WebSocket(
-          `ws://localhost:9001/tasks/${task.task_id}/ws`
-        );
+        const ws = subscribeToTask(task.task_id);
         console.log(`Created websocket for task ${task.task_id}`);
         ws.onmessage = (event) => {
           try {
@@ -38,13 +36,7 @@ export default function ListTasks() {
   }, [tasks, updateTask]);
 
   const revokeTask = async (task: Task) => {
-    try {
-      await fetch(`http://localhost:9001/tasks/${task.task_id}`, {
-        method: "DELETE",
-      });
-    } catch {
-      // TODO: handle errors
-    }
+    deleteTask(task.task_id);
   };
 
   if (!tasks.length) {

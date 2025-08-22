@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { TasksContext, type Task } from "../contexts/TasksContext";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
+import type { Task } from "../api/tasksApi";
+import { TasksContext } from "../contexts/TasksContext";
 
 export function TasksProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>(() => {
@@ -23,7 +24,9 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setTasks((prev) => {
       return prev.map((t) => {
         if (t.task_id === task.task_id && t.state !== task.state) {
-          console.log(`Task ${task.task_id} state changed from ${t.state} to ${task.state}`);
+          console.log(
+            `Task ${task.task_id} state changed from ${t.state} to ${task.state}`
+          );
           t.state = task.state;
           t.date_done = task.date_done;
         }
