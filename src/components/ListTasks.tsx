@@ -46,7 +46,7 @@ export default function ListTasks() {
           <th>task_id</th>
           <th>duration</th>
           <th>state</th>
-          <th>Delete</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -56,20 +56,40 @@ export default function ListTasks() {
             <td>{task.duration}</td>
             <td>
               {task.state === "SUCCESS" ? (
-                <span style={{ color: 'green', fontWeight: 'bold' }}>{task.state}</span>
+                <span style={{ color: "green", fontWeight: "bold" }}>{task.state}</span>
+              ) : task.state === "REVOKED" ? (
+                <span style={{ color: "orange", fontWeight: "bold" }}>{task.state}</span>
               ) : (
                 task.state ?? "UNKNOWN"
               )}
             </td>
             <td>
-              <button
-                aria-label="Delete Task"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em' }}
-                onClick={() => removeTask(task.task_id)}
-                title="Delete Task"
-              >
-                🗑️
-              </button>
+              {task.state === "PENDING" || task.state === "STARTED" && (
+                <button
+                  aria-label="Stop Task"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em', marginRight: '0.5em' }}
+                  onClick={async () => {
+                    try {
+                      await fetch(`http://localhost:9001/tasks/${task.task_id}`, { method: 'DELETE' });
+                    } catch {
+                      // Optionally handle error
+                    }
+                  }}
+                  title="Stop Task"
+                >
+                  🛑
+                </button>
+              )}
+              {(task.state === "SUCCESS" || task.state === "REVOKED") && (
+                <button
+                  aria-label="Delete Task"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em' }}
+                  onClick={() => removeTask(task.task_id)}
+                  title="Delete Task"
+                >
+                  🗑️
+                </button>
+              )}
             </td>
           </tr>
         ))}
