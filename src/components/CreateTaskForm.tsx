@@ -38,7 +38,6 @@ export default function CreateTaskForm() {
           type="number"
           name="duration"
           value={duration}
-          min={1}
           step={1}
           onChange={(e) => setDuration(+e.target.value)}
           style={{ marginLeft: 8, marginRight: 8 }}

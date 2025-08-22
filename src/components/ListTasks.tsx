@@ -1,5 +1,5 @@
 
-import { useTasks } from "../contexts/TasksContext";
+import { useTasks, type Task } from "../contexts/TasksContext";
 import { useEffect, useRef } from "react";
 
 export default function ListTasks() {
@@ -35,6 +35,14 @@ export default function ListTasks() {
     });
   }, [tasks, updateTask]);
 
+  const revokeTask = async (task: Task) => {
+    try {
+      await fetch(`http://localhost:9001/tasks/${task.task_id}`, { method: "DELETE" });
+    } catch {
+      // TODO: handle errors
+    }
+  };
+
   if (!tasks.length) {
     return <div>No tasks.</div>;
   }
@@ -59,37 +67,31 @@ export default function ListTasks() {
                 <span style={{ color: "green", fontWeight: "bold" }}>{task.state}</span>
               ) : task.state === "REVOKED" ? (
                 <span style={{ color: "orange", fontWeight: "bold" }}>{task.state}</span>
-              ) : (
-                task.state ?? "UNKNOWN"
-              )}
+              ) : task.state === "FAILURE" ? (
+                <span style={{ color: "red", fontWeight: "bold" }}>{task.state}</span>
+              ) : task.state ?? ""}
             </td>
             <td>
-              {task.state === "PENDING" || task.state === "STARTED" && (
+              {(["PENDING", "STARTED"].includes(task.state ?? "")) ? (
                 <button
-                  aria-label="Stop Task"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em', marginRight: '0.5em' }}
-                  onClick={async () => {
-                    try {
-                      await fetch(`http://localhost:9001/tasks/${task.task_id}`, { method: 'DELETE' });
-                    } catch {
-                      // Optionally handle error
-                    }
-                  }}
-                  title="Stop Task"
+                  type="button"
+                  aria-label="Revoke Task"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em', margin: '0 0.5rem' }}
+                  onClick={(e) => {e.preventDefault(); revokeTask(task); }}
+                  title="Revoke Task"
                 >
                   🛑
                 </button>
-              )}
-              {(task.state === "SUCCESS" || task.state === "REVOKED") && (
+              ) : (["SUCCESS", "REVOKED", "FAILURE"].includes(task.state ?? "")) ? (
                 <button
                   aria-label="Delete Task"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em', margin: "0 0.5rem" }}
                   onClick={() => removeTask(task.task_id)}
                   title="Delete Task"
                 >
                   🗑️
                 </button>
-              )}
+              ) : ""}
             </td>
           </tr>
         ))}
