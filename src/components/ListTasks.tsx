@@ -35,16 +35,6 @@ export default function ListTasks() {
     });
   }, [tasks, updateTask]);
 
-  // Cleanup only on unmount
-  // useEffect(() => {
-  //   return () => {
-  //     Object.values(wsRefs.current).forEach((ws) => {
-  //       if (ws && typeof ws.close === 'function') ws.close();
-  //     });
-  //     wsRefs.current = {};
-  //   };
-  // }, []);
-
   if (!tasks.length) {
     return <div>No tasks.</div>;
   }
