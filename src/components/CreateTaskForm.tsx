@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTasks } from "../TasksContext";
 
 export default function CreateTaskForm() {
-  const [duration, setDuration] = useState(30);
+  const [duration, setDuration] = useState(10);
   const { addTask } = useTasks();
 
   const createTaskMutation = useMutation({
