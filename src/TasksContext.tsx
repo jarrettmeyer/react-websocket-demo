@@ -2,13 +2,15 @@ import { createContext, useContext } from "react";
 
 export type Task = {
   task_id: string;
-  state: string;
+  duration?: number;
+  state?: string;
   date_done?: string;
 };
 
 export type TasksContextType = {
   tasks: Task[];
   addTask: (task: Task) => void;
+  updateTask: (task: Task) => void;
 };
 
 export const TasksContext = createContext<TasksContextType | undefined>(undefined);
