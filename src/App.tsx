@@ -4,8 +4,8 @@ import APIStatus from "./components/APIStatus";
 import CreateTaskForm from "./components/CreateTaskForm";
 import ListTasks from "./components/ListTasks";
 import { useState, useEffect } from "react";
-import { TasksContext } from "./TasksContext";
-import type { Task } from "./TasksContext";
+import { TasksContext } from "./contexts/TasksContext";
+import type { Task } from "./contexts/TasksContext";
 
 const queryClient = new QueryClient();
 

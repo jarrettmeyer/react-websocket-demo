@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useTasks } from "../TasksContext";
+import { useTasks } from "../contexts/TasksContext";
 
 export default function CreateTaskForm() {
   const [duration, setDuration] = useState(10);
