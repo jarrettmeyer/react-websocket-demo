@@ -41,6 +41,11 @@ export default function App() {
     });
   };
 
+
+  const removeTask = (task_id: string) => {
+    setTasks((prev) => prev.filter((t) => t.task_id !== task_id));
+  };
+
   // Persist tasks to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("react-websocket-demo-tasks", JSON.stringify(tasks));
@@ -48,7 +53,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TasksContext.Provider value={{ tasks, addTask, updateTask }}>
+  <TasksContext.Provider value={{ tasks, addTask, updateTask, removeTask }}>
         <h1>React Websocket Demo</h1>
         <APIStatus />
         <CreateTaskForm />

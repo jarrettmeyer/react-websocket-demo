@@ -3,7 +3,7 @@ import { useTasks } from "../TasksContext";
 import { useEffect, useRef } from "react";
 
 export default function ListTasks() {
-  const { tasks, updateTask } = useTasks();
+  const { tasks, updateTask, removeTask } = useTasks();
   const wsRefs = useRef<{ [key: string]: WebSocket }>({});
 
   // Only create sockets for new tasks
@@ -46,6 +46,7 @@ export default function ListTasks() {
           <th>task_id</th>
           <th>duration</th>
           <th>state</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -59,6 +60,16 @@ export default function ListTasks() {
               ) : (
                 task.state ?? "UNKNOWN"
               )}
+            </td>
+            <td>
+              <button
+                aria-label="Delete Task"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2em' }}
+                onClick={() => removeTask(task.task_id)}
+                title="Delete Task"
+              >
+                🗑️
+              </button>
             </td>
           </tr>
         ))}
